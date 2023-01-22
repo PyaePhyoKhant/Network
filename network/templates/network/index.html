@@ -1,9 +1,12 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
+
+{% if user.is_authenticated %}
 <div class="card">
     <div class="card-body">
-        <form>
+        <form action="{% url 'post-add' %}" method="post">
+            {% csrf_token %}
             <div class="form-group">
                 <h3>New Post</h3>
                 <textarea class="form-control" name="description" rows="3"></textarea>
@@ -12,4 +15,6 @@
         </form>
     </div>
 </div>
+{% endif %}
+
 {% endblock %}

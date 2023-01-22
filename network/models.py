@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from crum import get_current_user
+from django.urls import reverse
 
 
 class User(AbstractUser):
@@ -16,3 +17,6 @@ class Post(models.Model):
         if not self.pk:
             self.created_by = get_current_user()
         super().save(*args, **kwargs)
+        
+    def get_absolute_url(self):
+        return reverse("index")
