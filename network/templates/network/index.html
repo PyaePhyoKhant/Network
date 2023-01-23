@@ -17,4 +17,14 @@
 </div>
 {% endif %}
 
+{% for post in object_list %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h2>{{ post.created_by }}</h2>
+            <p>{{ post.description }}</p>
+            <small>{{ post.created_at }}</small>
+        </div>
+    </div>
+{% endfor %}
+
 {% endblock %}

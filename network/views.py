@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic.edit import CreateView
+from django.views.generic import ListView
 from .models import User, Post
 
 
@@ -11,6 +12,12 @@ class PostCreateView(CreateView):
     model = Post
     fields = ['description']
     
+
+class PostListView(ListView):
+    model = Post
+    queryset = Post.objects.order_by('-created_at')
+    template_name = 'network/index.html'
+
 
 def index(request):
     return render(request, "network/index.html")
