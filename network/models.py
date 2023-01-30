@@ -5,7 +5,10 @@ from django.urls import reverse
 
 
 class User(AbstractUser):
-    pass
+    following = models.ManyToManyField('self', symmetrical=False)
+    
+    def is_in_following(self, user):
+        return self.following.filter(pk=user.pk).exists()
 
 
 class Post(models.Model):

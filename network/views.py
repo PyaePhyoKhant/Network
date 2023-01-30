@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic.edit import CreateView
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from .models import User, Post
 
 
@@ -17,7 +17,26 @@ class PostListView(ListView):
     model = Post
     queryset = Post.objects.order_by('-created_at')
     template_name = 'network/index.html'
+    
+    
+class UserDetailView(DetailView):
+    model = User
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_in_following'] = self.request.user.is_in_following(context['object'])
+        # to avoid conflict with template `user`
+        del context['user']
+        return context
 
+
+def change_following(request):
+    other_user = User.objects.get(id=int(request.POST['user_id']))
+    if request.user.is_in_following(other_user):
+        request.user.following.remove(other_user)
+    else:
+        request.user.following.add(other_user)
+    return HttpResponseRedirect(reverse('user-detail', kwargs={'pk': other_user.id}))
 
 def index(request):
     return render(request, "network/index.html")

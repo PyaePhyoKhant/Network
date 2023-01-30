@@ -1,0 +1,42 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>User Profile</h1>
+        </div>
+    </div>
+    <div class="row">
+        <h2>{{ object.username }}</h2>
+    </div>
+    <div class="row"><p>Following: {{ object.following.count }}</p></div>
+    <div class="row"><p>Followers: {{ object.user_set.count }}</p></div>
+
+    {% if user != object %}
+    <div class="row">
+        <form action="{% url 'change_following' %}" method="post">
+            {% csrf_token %}
+            <input name="user_id" value="{{ object.id }}" hidden>
+            {% if is_in_following %}
+                <input class="btn btn-primary" type="submit" value="Unfollow">
+            {% else %}
+                <input class="btn btn-primary" type="submit" value="Follow">
+            {% endif %}
+        </form>
+    </div>
+    {% endif %}
+</div>
+
+{% for post in object.post_set.all %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <a class="nav-link" href="{% url 'user-detail' post.created_by.pk %}"><strong>{{ post.created_by }}</strong></a>
+            <p>{{ post.description }}</p>
+            <small>{{ post.created_at }}</small>
+        </div>
+    </div>
+{% endfor %}
+
+{% endblock %}
