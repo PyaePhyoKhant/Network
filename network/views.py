@@ -19,6 +19,14 @@ class PostListView(ListView):
     template_name = 'network/index.html'
     
     
+class PostFollowingView(ListView):
+    model = Post
+    template_name = 'network/following.html'
+    
+    def get_queryset(self):
+        return Post.objects.filter(created_by__in=self.request.user.following.all()).order_by('-created_at')
+    
+    
 class UserDetailView(DetailView):
     model = User
     

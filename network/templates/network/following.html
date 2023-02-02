@@ -1,0 +1,15 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+
+{% for post in object_list %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <a class="nav-link" href="{% url 'user-detail' post.created_by.pk %}"><strong>{{ post.created_by }}</strong></a>
+            <p>{{ post.description }}</p>
+            <small>{{ post.created_at }}</small>
+        </div>
+    </div>
+{% endfor %}
+
+{% endblock %}
