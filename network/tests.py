@@ -29,4 +29,6 @@ class PostTests(TestCase):
         res = self.client.get(reverse('following'))
         users_of_posts = set(res.context['object_list'].values_list('created_by', flat=True))
         self.assertEqual(users_of_posts, set([self.user2.id, self.user3.id]))
+        # CI test on main branch
+        self.assertEqual(1, 2)
         
