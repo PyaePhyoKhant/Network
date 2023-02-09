@@ -17,11 +17,13 @@ class PostListView(ListView):
     model = Post
     queryset = Post.objects.order_by('-created_at')
     template_name = 'network/index.html'
+    paginate_by = 10
     
     
 class PostFollowingView(ListView):
     model = Post
     template_name = 'network/following.html'
+    paginate_by = 10
     
     def get_queryset(self):
         return Post.objects.filter(created_by__in=self.request.user.following.all()).order_by('-created_at')
