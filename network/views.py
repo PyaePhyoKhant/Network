@@ -1,16 +1,40 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic.edit import CreateView
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, UpdateView
+from django.views.decorators.csrf import csrf_exempt
+import json
 from .models import User, Post
 
 
 class PostCreateView(CreateView):
     model = Post
     fields = ['description']
+    
+
+class PostUpdateView(UpdateView):
+    model = Post
+    fields = ['description']
+    
+    
+@csrf_exempt
+@login_required
+def update_post(request):
+    if request.method != "PUT":
+        return JsonResponse({"error": "PUT request required."}, status=400)
+
+    data = json.loads(request.body)
+    post = Post.objects.get(pk=int(data['id']))
+    if post.created_by != request.user:
+        return JsonResponse({"error": "Access rights error."}, status=403)
+    post.description = data['description']
+    post.save()
+
+    return JsonResponse({"message": "Post updated successfully."}, status=200)
     
 
 class PostListView(ListView):

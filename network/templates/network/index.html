@@ -23,6 +23,18 @@
             <a class="nav-link" href="{% url 'user-detail' post.created_by.pk %}"><strong>{{ post.created_by }}</strong></a>
             <p>{{ post.description }}</p>
             <small>{{ post.created_at }}</small>
+            {% if post.created_by == request.user %}
+                <form action="{% url 'post-update' %}" method="post" style="display: none;">
+                    <!-- {% csrf_token %} -->
+                    <input name="id" value="{{ post.id }}" hidden>
+                    <div class="form-group">
+                        <textarea class="form-control" name="description" rows="3">{{ post.description }}</textarea>
+                    </div>
+                    <button class="btn btn-primary edit-save">Save</button>
+                </form>
+
+                <button class="edit" href="">edit</button>
+            {% endif %}
         </div>
     </div>
 {% endfor %}
